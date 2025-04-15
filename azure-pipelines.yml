@@ -66,11 +66,12 @@ stages:
     - task: NuGetAuthenticate@0
       displayName: 'NuGet Authenticate'
 
-    - task: DotNetCoreCLI@2
+    - task: NuGetCommand@2
       displayName: 'Push to Azure Artifacts'
       inputs:
         command: 'push'
         packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
         nuGetFeedType: 'internal'
-        publishFeedCredentials: 'roish123456789/helloWorld'
-        verbosityPush: 'Detailed'
+        publishVstsFeed: 'roish123456789/helloWorld'
+        allowPackageConflicts: true
+        vstsFeed: 'helloWorld'
