@@ -72,6 +72,6 @@ stages:
         command: 'push'
         packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
         nuGetFeedType: 'internal'
-        publishVstsFeed: 'helloWorld'
+        publishVstsFeed: 'https://pkgs.dev.azure.com/roish123456789/helloWorld/_packaging/helloWorld/nuget/v3/index.json'
         allowPackageConflicts: true
         vstsFeed: 'helloWorld'
