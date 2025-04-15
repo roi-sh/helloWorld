@@ -71,5 +71,5 @@ stages:
       inputs:
         command: 'push'
         packagesToPush: '$(System.ArtifactsDirectory)/drop/**/*.nupkg'
-        publishVstsFeed: 'helloWorld'
+        publishVstsFeed: 'roish123456789/helloWorld'
         allowPackageConflicts: true
