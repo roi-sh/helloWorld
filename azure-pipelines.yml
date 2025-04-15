@@ -22,6 +22,7 @@ stages:
       displayName: 'Use .NET Core SDK'
       inputs:
         version: $(dotnetVersion)
+        performMultiLevelLookup: true 
 
     - script: dotnet restore
       displayName: 'Restore dependencies'
