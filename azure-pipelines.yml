@@ -5,7 +5,7 @@ trigger:
 
 variables:
   buildConfiguration: 'Release'
-  dotnetVersion: '8.0.x'
+  dotnetVersion: '8.0.115'
   nugetPackageName: 'MySampleApp'
 
 pool:
