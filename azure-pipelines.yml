@@ -36,11 +36,10 @@ stages:
     - task: DotNetCoreCLI@2
       displayName: 'Pack NuGet package'
       inputs:
-        command: 'pack'
-        configuration: $(buildConfiguration)
-        packagesToPack: '**/$(nugetPackageName).csproj'
-        versioningScheme: 'byEnvVar'
-        versionEnvVar: 'VERSION_NUMBER'  # This will use the version from Directory.Build.props
+        command: 'custom'
+        custom: 'pack'
+        arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory) /p:PackageVersion=$(Build.BuildNumber)'
+        projects: '**/*.csproj'
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish build artifacts'
