@@ -74,4 +74,4 @@ stages:
         nuGetFeedType: 'internal'
         publishVstsFeed: 'https://pkgs.dev.azure.com/roish123456789/helloWorld/_packaging/helloWorld/nuget/v3/index.json'
         allowPackageConflicts: true
-        vstsFeed: 'helloWorld'
+        vstsFeed: 'https://pkgs.dev.azure.com/roish123456789/helloWorld/_packaging/helloWorld/nuget/v3/index.json'
