@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <VersionSuffix Condition="'$(BUILD_REASON)' == 'PullRequest'">-pr$(SYSTEM_PULLREQUEST_PULLREQUESTNUMBER)</VersionSuffix>
+    <VersionSuffix Condition="'$(VersionSuffix)' == ''">-ci$(BUILD_BUILDID)</VersionSuffix>
+    <AssemblyVersion>$(VersionPrefix)</AssemblyVersion>
+    <FileVersion>$(VersionPrefix)</FileVersion>
+    <InformationalVersion>$(VersionPrefix)$(VersionSuffix)</InformationalVersion>
+  </PropertyGroup>
+</Project>
