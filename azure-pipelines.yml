@@ -9,7 +9,7 @@ variables:
   nugetPackageName: 'MySampleApp'
 
 pool:
-  vmImage: 'ubuntu-latest'  # or your self-hosted agent pool
+  name: 'Default'
 
 stages:
 - stage: Build
