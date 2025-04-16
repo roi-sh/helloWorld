@@ -111,7 +111,7 @@ stages:
       inputs:
         command: 'push'
         packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
-        publishFeedCredentials: 'Your_Azure_Feed_Connection_Name'
+        publishFeedCredentials: 'Yc23485ab-5043-4e9c-b5fb-74ea3921a802'
 
 
 
