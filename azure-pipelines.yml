@@ -68,10 +68,10 @@ stages:
       displayName: 'Verify package exists'
 
     - task: NuGetCommand@2
-      displayName: 'Push to Azure Artifacts'
-      inputs:
-        command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
-        nuGetFeedType: 'internal'
-        publishVstsFeed: 'roish123456789/helloWorld/MyNewFeed
-        allowPackageConflicts: true
+        displayName: 'Push to Azure Artifacts'
+        inputs:
+          command: 'push'
+          packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
+          nuGetFeedType: 'internal'
+          vstsFeed: 'helloWorld/MyNewFeed'
+          allowPackageConflicts: true
