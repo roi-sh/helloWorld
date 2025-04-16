@@ -76,7 +76,7 @@ stages:
         cliSources: 'src/'
         extraProperties: |
           sonar.host.url=$(sonarHostUrl)
-          sonar.login=$(SONARQUBE_TOKEN)
+          sonar.token=$(SONARQUBE_TOKEN)
 
     # Critical: Restore dependencies before build
     - script: dotnet restore
