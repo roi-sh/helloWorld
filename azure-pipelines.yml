@@ -13,8 +13,7 @@ variables:
   - name: projectPath
     value: '*/.csproj'
   - name: feedName
-    value: 'nitzanmr'
-  - group: Smtp
+    value: 'helloWorld'
 
 steps:
 - task: SonarQubePrepare@5
