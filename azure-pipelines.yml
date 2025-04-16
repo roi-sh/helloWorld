@@ -57,42 +57,45 @@ stages:
 - stage: SonarQube_Analysis
   displayName: 'SonarQube Scan'
   dependsOn: Build
-  condition: succeeded()  # Only run if Build stage succeeds
+  condition: succeeded()
   jobs:
   - job: SonarQube_Scan
     steps:
-
+    # Authenticate with NuGet
     - task: NuGetAuthenticate@1
       displayName: 'Authenticate with NuGet'
-      
-    # Install SonarScanner for .NET
+
+    # Install SonarScanner
     - script: dotnet tool install --global dotnet-sonarscanner --version 5.*
       displayName: 'Install SonarScanner'
 
-    # Begin SonarQube analysis
+    # Prepare SonarQube analysis
     - task: SonarQubePrepare@5
-      displayName: 'Prepare SonarQube Analysis'
+      displayName: 'Prepare Analysis'
       inputs:
-        SonarQube: 'SonarQube_Service_Connection'  # Must match your service connection name
+        SonarQube: 'SonarQube_Service_Connection'
         scannerMode: 'CLI'
-        configMode: 'manual'
         cliProjectKey: $(sonarProjectKey)
         cliProjectName: $(sonarProjectName)
-        cliSources: 'src/'  # Directory containing source code
+        cliSources: 'src/'
         extraProperties: |
           sonar.host.url=$(sonarHostUrl)
-          sonar.login=$(SONARQUBE_TOKEN)  # Use a secret pipeline variable
+          sonar.login=$(SONARQUBE_TOKEN)
 
-    # Build the project (SonarQube collects data during build)
-    - script: dotnet build --configuration $(buildConfiguration) --no-restore
+    # Critical: Restore dependencies before build
+    - script: dotnet restore
+      displayName: 'Restore dependencies for SonarQube'
+
+    # Build with SonarQube analysis
+    - script: dotnet build --configuration $(buildConfiguration)
       displayName: 'Build with SonarQube'
 
-    # Complete analysis & upload results
+    # Complete analysis
     - task: SonarQubeAnalyze@5
-      displayName: 'Run Code Analysis'
+      displayName: 'Run Analysis'
 
     - task: SonarQubePublish@5
-      displayName: 'Publish Results to SonarQube'
+      displayName: 'Publish Results'
 
 
 
