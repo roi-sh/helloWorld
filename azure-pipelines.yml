@@ -71,6 +71,7 @@ stages:
         extraProperties: |
           sonar.host.url=$(sonarHostUrl)
           sonar.token=$(SONARQUBE_TOKEN)
+          sonar.branch.name=$(Build.SourceBranchName)
 
     - task: DotNetCoreCLI@2
       displayName: 'Build with SonarQube'
