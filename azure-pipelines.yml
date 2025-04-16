@@ -73,5 +73,6 @@ stages:
         command: 'push'
         packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
         nuGetFeedType: 'internal'
-        vstsFeed: 'roish123456789/helloWorld/MyNewFeed'
+        vstsFeed: 'c23485ab-5043-4e9c-b5fb-74ea3921a802'
         allowPackageConflicts: true
+
