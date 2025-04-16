@@ -7,7 +7,7 @@ pool:
 
 variables:
   feedId: 'e8a1abd1-1b1d-403c-8d3c-8917889e585f' # Update with your actual feed ID
-  azureServiceConnection: 'SonarQube_Service_Connection' # Update with your actual service connection name
+  azureServiceConnection: 'MySampleApp' # Update with your actual service connection name
 
 steps:
 - script: ls -la
@@ -16,7 +16,7 @@ steps:
 ##########################connect 2 sonarqube#######################################
 - task: SonarQubePrepare@7
   inputs:
-    SonarQube: 'SonarQube_Service_Connection' # Ensure this matches your service connection name
+    SonarQube: 'MySampleApp' # Ensure this matches your service connection name
     scannerMode: 'dotnet'
     dotnetScannerVersion: '8.0.115'
     projectKey: 'MySampleApp'
