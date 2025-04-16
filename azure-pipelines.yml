@@ -5,32 +5,31 @@ trigger:
 pool:
   name: Default
 
+variables:
+  feedId: 'e8a1abd1-1b1d-403c-8d3c-8917889e585f' # Update with your actual feed ID
+  azureServiceConnection: 'MySampleApp' # Update with your actual service connection name
+
 steps:
-
-
 - script: ls -la
   displayName: 'listing'
 
-##########################connect 2 sunarqube#######################################
-
+##########################connect 2 sonarqube#######################################
 - task: SonarQubePrepare@7
   inputs:
-    SonarQube: 'sonarcube_for_pipeline'
+    SonarQube: 'sonarcube_for_pipeline' # Ensure this matches your service connection name
     scannerMode: 'dotnet'
     dotnetScannerVersion: '8.0.115'
     projectKey: 'MySampleApp'
     projectName: 'MySampleApp'
 
-
 ##########################restore and pack#######################################
-
 - task: DotNetCoreCLI@2
   inputs:
     command: 'restore'
     projects: '*/.csproj'
     feedsToUse: 'select'
-    vstsFeed: 'Yc23485ab-5043-4e9c-b5fb-74ea3921a802' #roy change this  to yours
-  displayName:  restore
+    vstsFeed: '$(feedId)'
+  displayName: restore
   
 - task: DotNetCoreCLI@2
   displayName: 'build'
@@ -38,12 +37,7 @@ steps:
     command: 'build'
     projects: '*/.csproj'
 
-
-
-
 ###########################sonarqube check and publish################################
-
-
 - task: SonarQubeAnalyze@7
   inputs:
     jdkversion: 'JAVA_HOME_17_X64'
@@ -53,15 +47,12 @@ steps:
     pollingTimeoutSec: '300'
 
 ##########################pack#######################################
-
-
 - script: |
     BRANCH_NAME=$(echo $(Build.SourceBranch) | sed 's/refs\/heads\///')
     dotnet pack -p:Version=1.0.$(Build.BuildId) -p:PackageId=${BRANCH_NAME}_$(Build.BuildId) -o ./lola
   displayName: pack to lola
 
 ##########################debuging#######################################
-
 - script: ls -la
   displayName: 'listing2'
 
@@ -72,8 +63,8 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'push'
   inputs:
-    azureSubscription: 'Azure subscription 1(Yc23485ab-5043-4e9c-b5fb-74ea3921a802)'   #roy change this  to yours
+    azureSubscription: '$(azureServiceConnection)'
     command: 'push'
     packagesToPush: './lola/*.nupkg'
     nuGetFeedType: 'internal'
-    publishVstsFeed: '08c3489a-38c5-40c0-bace-d3a3d3307e71'
+    publishVstsFeed: '$(feedId)'
