@@ -7,7 +7,7 @@ pool:
 
 variables:
   feedId: 'e8a1abd1-1b1d-403c-8d3c-8917889e585f' # Update with your actual feed ID
-  azureServiceConnection: 'MySampleApp' # Update with your actual service connection name
+  azureServiceConnection: 'SonarQube_Service_Connection' # Update with your actual service connection name
 
 steps:
 - script: ls -la
