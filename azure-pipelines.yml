@@ -64,14 +64,16 @@ stages:
         downloadPath: '$(System.ArtifactsDirectory)'
 
     - task: NuGetAuthenticate@0
-      displayName: 'NuGet Authenticate'
+      displayName: "Authenticate with Azure Artifacts"
+
+    - script: ls -la $(Build.ArtifactStagingDirectory)
+      displayName: 'Verify package exists'
 
     - task: NuGetCommand@2
-      displayName: 'Push to Azure Artifacts'
+      displayName: 'Push NuGet package'
       inputs:
         command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
+        packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
         nuGetFeedType: 'internal'
-        publishVstsFeed: 'e8a1abd1-1b1d-403c-8d3c-8917889e585f'
+        publishVstsFeed: 'helloWorld'
         allowPackageConflicts: true
-        vstsFeed: 'e8a1abd1-1b1d-403c-8d3c-8917889e585f'
