@@ -87,31 +87,31 @@ stages:
       inputs:
         pollingTimeoutSec: '300'
 
-- stage: Publish
-  displayName: 'Publish to Azure Artifacts'
-  dependsOn: Build
-  condition: succeeded()
-  jobs:
-  - job: Publish
-    steps:
-    - task: DownloadBuildArtifacts@0
-      displayName: 'Download build artifacts'
-      inputs:
-        artifactName: 'drop'
-        downloadPath: '$(System.ArtifactsDirectory)'
+# - stage: Publish
+#   displayName: 'Publish to Azure Artifacts'
+#   dependsOn: Build
+#   condition: succeeded()
+#   jobs:
+#   - job: Publish
+#     steps:
+#     - task: DownloadBuildArtifacts@0
+#       displayName: 'Download build artifacts'
+#       inputs:
+#         artifactName: 'drop'
+#         downloadPath: '$(System.ArtifactsDirectory)'
 
-    - task: NuGetAuthenticate@1
-      displayName: 'Authenticate with Azure Artifacts'
+#     - task: NuGetAuthenticate@1
+#       displayName: 'Authenticate with Azure Artifacts'
 
-    - script: ls -la $(System.ArtifactsDirectory)/drop
-      displayName: 'Verify package exists'
+#     - script: ls -la $(System.ArtifactsDirectory)/drop
+#       displayName: 'Verify package exists'
 
-    - task: DotNetCoreCLI@2
-      displayName: 'Push to Azure Artifacts'
-      inputs:
-        command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
-        publishFeedCredentials: 'Yc23485ab-5043-4e9c-b5fb-74ea3921a802'
+#     - task: DotNetCoreCLI@2
+#       displayName: 'Push to Azure Artifacts'
+#       inputs:
+#         command: 'push'
+#         packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
+#         publishFeedCredentials: 'Yc23485ab-5043-4e9c-b5fb-74ea3921a802'
 
 
 
