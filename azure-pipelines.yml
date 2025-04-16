@@ -16,13 +16,13 @@ steps:
   displayName: 'listing'
 
 ##########################connect 2 sonarqube#######################################
-- task: SonarQubePrepare@7
-  inputs:
-    SonarQube: '$(sonarQubeServiceConnection)' # Ensure this matches your service connection name
-    scannerMode: 'dotnet'
-    dotnetScannerVersion: '$(sonarScannerVersion)'
-    projectKey: 'MySampleApp'
-    projectName: 'MySampleApp'
+# - task: SonarQubePrepare@7
+#   inputs:
+#     SonarQube: '$(sonarQubeServiceConnection)' # Ensure this matches your service connection name
+#     scannerMode: 'dotnet'
+#     dotnetScannerVersion: '$(sonarScannerVersion)'
+#     projectKey: 'MySampleApp'
+#     projectName: 'MySampleApp'
 
 ##########################restore and pack#######################################
 - task: DotNetCoreCLI@2
