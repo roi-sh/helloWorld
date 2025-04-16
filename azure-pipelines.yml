@@ -1,3 +1,109 @@
+
+# trigger:
+# - master
+# - main
+
+# pool:
+#   name: Default
+
+# steps:
+
+
+# - script: ls -la
+#   displayName: 'listing'
+
+# ##########################connect 2 sunarqube#######################################
+
+# - task: SonarQubePrepare@7
+#   inputs:
+#     SonarQube: 'sonarcube_for_pipeline'
+#     scannerMode: 'dotnet'
+#     dotnetScannerVersion: '8.0.3.99785'
+#     projectKey: 'hello_world_dotnet_hello_world_dotnet_4bdce7b4-458e-4834-a045-6ab83d4a735d'
+#     projectName: 'hello_world_dotnet'
+
+
+# ##########################restore and pack#######################################
+
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'restore'
+#     projects: '*/.csproj'
+#     feedsToUse: 'select'
+#     vstsFeed: '08c3489a-38c5-40c0-bace-d3a3d3307e71' #roy change this  to yours
+#   displayName:  restore
+  
+# - task: DotNetCoreCLI@2
+#   displayName: 'build'
+#   inputs:
+#     command: 'build'
+#     projects: '*/.csproj'
+
+
+
+
+# ###########################sonarqube check and publish################################
+
+
+# - task: SonarQubeAnalyze@7
+#   inputs:
+#     jdkversion: 'JAVA_HOME_17_X64'
+
+# - task: SonarQubePublish@7
+#   inputs:
+#     pollingTimeoutSec: '300'
+
+# ##########################pack#######################################
+
+
+# - script: |
+#     BRANCH_NAME=$(echo $(Build.SourceBranch) | sed 's/refs\/heads\///')
+#     dotnet pack -p:Version=1.0.$(Build.BuildId) -p:PackageId=${BRANCH_NAME}_$(Build.BuildId) -o ./lola
+#   displayName: pack to lola
+
+# ##########################debuging#######################################
+
+# - script: ls -la
+#   displayName: 'listing2'
+
+# - script: ls -la ./lola
+#   displayName: 'listing lola directory'
+
+# ##########################push#######################################
+# - task: DotNetCoreCLI@2
+#   displayName: 'push'
+#   inputs:
+#     azureSubscription: 'Azure subscription 1(0846d70b-8e63-47a0-bea7-68aedcd018e2)'   #roy change this  to yours
+#     command: 'push'
+#     packagesToPush: './lola/*.nupkg'
+#     nuGetFeedType: 'internal'
+#     publishVstsFeed: '08c3489a-38c5-40c0-bace-d3a3d3307e71'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 name: '$(Date:yyyyMMdd).$(Rev:r)'
 
 trigger:
@@ -61,39 +167,57 @@ stages:
   jobs:
   - job: SonarQube_Scan
     steps:
-    # Authenticate with NuGet
-    - task: NuGetAuthenticate@1
-      displayName: 'Authenticate with NuGet'
-
-    # Prepare SonarQube analysis
-    - task: SonarQubePrepare@5
-      displayName: 'Prepare Analysis'
+    - task: SonarQubePrepare@7
       inputs:
         SonarQube: 'SonarQube_Service_Connection'
-        scannerMode: 'CLI'
-        cliProjectKey: $(sonarProjectKey)
-        cliProjectName: $(sonarProjectName)
-        cliSources: 'src/'
+        scannerMode: 'dotnet'
+        dotnetScannerVersion: '8.0.3.99785'
+        projectKey: $(sonarProjectKey)
+        projectName: $(sonarProjectName)
         extraProperties: |
           sonar.host.url=$(sonarHostUrl)
           sonar.token=$(SONARQUBE_TOKEN)
 
-    # Critical: Restore dependencies before build
-    - script: dotnet restore
-      displayName: 'Restore dependencies for SonarQube'
-
-    # Build with SonarQube analysis
-    - script: dotnet build --configuration $(buildConfiguration)
+    - task: DotNetCoreCLI@2
       displayName: 'Build with SonarQube'
+      inputs:
+        command: 'build'
+        projects: '**/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
 
-    # Complete analysis
-    - task: SonarQubeAnalyze@5
-      displayName: 'Run Analysis'
+    - task: SonarQubeAnalyze@7
+      inputs:
+        jdkversion: 'JAVA_HOME_17_X64'
 
-    - task: SonarQubePublish@5
-      displayName: 'Publish Results'
+    - task: SonarQubePublish@7
+      inputs:
+        pollingTimeoutSec: '300'
 
+- stage: Publish
+  displayName: 'Publish to Azure Artifacts'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - job: Publish
+    steps:
+    - task: DownloadBuildArtifacts@0
+      displayName: 'Download build artifacts'
+      inputs:
+        artifactName: 'drop'
+        downloadPath: '$(System.ArtifactsDirectory)'
 
+    - task: NuGetAuthenticate@1
+      displayName: 'Authenticate with Azure Artifacts'
+
+    - script: ls -la $(System.ArtifactsDirectory)/drop
+      displayName: 'Verify package exists'
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Push to Azure Artifacts'
+      inputs:
+        command: 'push'
+        packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
+        publishFeedCredentials: 'Your_Azure_Feed_Connection_Name'
 
 
 
