@@ -9,20 +9,20 @@ variables:
   feedId: 'e8a1abd1-1b1d-403c-8d3c-8917889e585f' # Update with your actual feed ID
   azureServiceConnection: 'Azure_roi' # Update with your actual service connection name
   sonarQubeServiceConnection: 'roi'
-  sonarScannerVersion: '5.13.1'
+  sonarScannerVersion: 5.13.1
 
 steps:
 - script: ls -la
   displayName: 'listing'
 
 ##########################connect 2 sonarqube#######################################
-# - task: SonarQubePrepare@7
-#   inputs:
-#     SonarQube: '$(sonarQubeServiceConnection)' # Ensure this matches your service connection name
-#     scannerMode: 'dotnet'
-#     dotnetScannerVersion: '$(sonarScannerVersion)'
-#     projectKey: 'MySampleApp'
-#     projectName: 'MySampleApp'
+- task: SonarQubePrepare@7
+  inputs:
+    SonarQube: '$(sonarQubeServiceConnection)' # Ensure this matches your service connection name
+    scannerMode: 'dotnet'
+    dotnetScannerVersion: '$(sonarScannerVersion)'
+    projectKey: 'MySampleApp'
+    projectName: 'MySampleApp'
 
 ##########################restore and pack#######################################
 - task: DotNetCoreCLI@2
