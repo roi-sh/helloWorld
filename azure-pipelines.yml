@@ -71,7 +71,7 @@ stages:
       displayName: 'Push to Azure Artifacts'
       inputs:
         command: 'push'
-        packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
         nuGetFeedType: 'internal'
         publishVstsFeed: 'roish123456789/helloWorld/MyNewFeed
         allowPackageConflicts: true
