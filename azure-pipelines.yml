@@ -19,7 +19,7 @@ steps:
     SonarQube: 'roi' # Ensure this matches your service connection name
     scannerMode: 'dotnet'
     dotnetScannerVersion: '8.0.115'
-    projectKey: 'roi'
+    projectKey: 'MySampleApp'
     projectName: 'MySampleApp'
 
 ##########################restore and pack#######################################
