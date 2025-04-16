@@ -7,6 +7,9 @@ variables:
   buildConfiguration: 'Release'
   dotnetVersion: '8.0.115'
   nugetPackageName: 'MySampleApp'
+  sonarProjectKey: 'MySampleApp'
+  sonarProjectName: 'MySampleApp'
+  sonarHostUrl: 'http://4.180.13.204:9000' 
 
 pool:
   name: 'Default'
@@ -51,31 +54,67 @@ stages:
         ArtifactName: 'drop'
         publishLocation: 'Container'
 
-- stage: Publish
-  displayName: 'Publish to Azure Artifacts'
+- stage: SonarQube_Analysis
+  displayName: 'SonarQube Scan'
   dependsOn: Build
-  condition: succeeded()
+  condition: succeeded()  # Only run if Build stage succeeds
   jobs:
-  - job: Publish
+  - job: SonarQube_Scan
     steps:
-    - task: DownloadBuildArtifacts@0
-      displayName: 'Download build artifacts'
+    # Install SonarScanner for .NET
+    - script: dotnet tool install --global dotnet-sonarscanner --version 5.*
+      displayName: 'Install SonarScanner'
+
+    # Begin SonarQube analysis
+    - task: SonarQubePrepare@5
+      displayName: 'Prepare SonarQube Analysis'
       inputs:
-        artifactName: 'drop'
-        downloadPath: '$(System.ArtifactsDirectory)'
+        SonarQube: 'SonarQube_Service_Connection'  # Must match your service connection name
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: $(sonarProjectKey)
+        cliProjectName: $(sonarProjectName)
+        cliSources: 'src/'  # Directory containing source code
+        extraProperties: |
+          sonar.host.url=$(sonarHostUrl)
+          sonar.login=$(SONARQUBE_TOKEN)  # Use a secret pipeline variable
 
-    - task: NuGetAuthenticate@1
-      displayName: 'Authenticate with Azure Artifacts'
+    # Build the project (SonarQube collects data during build)
+    - script: dotnet build --configuration $(buildConfiguration) --no-restore
+      displayName: 'Build with SonarQube'
 
-    - script: ls -la $(System.ArtifactsDirectory)/drop
-      displayName: 'Verify package exists'
+    # Complete analysis & upload results
+    - task: SonarQubeAnalyze@5
+      displayName: 'Run Code Analysis'
 
-    - task: NuGetCommand@2
-      displayName: 'Push to Azure Artifacts'
-      inputs:
-        command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
-        nuGetFeedType: 'internal'
-        vstsFeed: 'hello'
-        allowPackageConflicts: true
+    - task: SonarQubePublish@5
+      displayName: 'Publish Results to SonarQube'
+
+# - stage: Publish
+#   displayName: 'Publish to Azure Artifacts'
+#   dependsOn: Build
+#   condition: succeeded()
+#   jobs:
+#   - job: Publish
+#     steps:
+#     - task: DownloadBuildArtifacts@0
+#       displayName: 'Download build artifacts'
+#       inputs:
+#         artifactName: 'drop'
+#         downloadPath: '$(System.ArtifactsDirectory)'
+
+#     - task: NuGetAuthenticate@1
+#       displayName: 'Authenticate with Azure Artifacts'
+
+#     - script: ls -la $(System.ArtifactsDirectory)/drop
+#       displayName: 'Verify package exists'
+
+#     - task: NuGetCommand@2
+#       displayName: 'Push to Azure Artifacts'
+#       inputs:
+#         command: 'push'
+#         packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
+#         nuGetFeedType: 'internal'
+#         vstsFeed: 'hello'
+#         allowPackageConflicts: true
 
