@@ -16,7 +16,7 @@ steps:
 ##########################connect 2 sonarqube#######################################
 - task: SonarQubePrepare@7
   inputs:
-    SonarQube: 'sonarcube_for_pipeline' # Ensure this matches your service connection name
+    SonarQube: 'SonarQube_Service_Connection' # Ensure this matches your service connection name
     scannerMode: 'dotnet'
     dotnetScannerVersion: '8.0.115'
     projectKey: 'MySampleApp'
