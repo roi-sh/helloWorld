@@ -74,5 +74,5 @@ stages:
         packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
         nuGetFeedType: 'internal'
         publishVstsFeed: 'helloWorld'
-        vstsFeed: 'helloWorld'       
+        vstsFeed: 'helloWorld/helloWorld'       
         allowPackageConflicts: true
