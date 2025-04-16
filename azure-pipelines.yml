@@ -24,6 +24,9 @@ stages:
         version: $(dotnetVersion)
         performMultiLevelLookup: true 
 
+    - task: NuGetAuthenticate@1
+      displayName: 'Authenticate with Azure Artifacts'
+
     - script: dotnet restore
       displayName: 'Restore dependencies'
 
@@ -47,7 +50,7 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-
+        
 - stage: Publish
   displayName: 'Publish to Azure Artifacts'
   dependsOn: Build
