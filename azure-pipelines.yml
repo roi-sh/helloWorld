@@ -58,22 +58,21 @@ stages:
     - task: DownloadBuildArtifacts@0
       displayName: 'Download build artifacts'
       inputs:
-        buildType: 'current'
-        downloadType: 'single'
         artifactName: 'drop'
         downloadPath: '$(System.ArtifactsDirectory)'
 
-    - task: NuGetAuthenticate@0
-      displayName: "Authenticate with Azure Artifacts"
+    - task: NuGetAuthenticate@1
+      displayName: 'Authenticate with Azure Artifacts'
 
-    - script: ls -la $(System.ArtifactsDirectory)/drop/*.nupkg
+    - script: ls -la $(System.ArtifactsDirectory)/drop
       displayName: 'Verify package exists'
 
     - task: NuGetCommand@2
-      displayName: 'Push NuGet package'
+      displayName: 'Push to Azure Artifacts'
       inputs:
         command: 'push'
         packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
         nuGetFeedType: 'internal'
-        publishVstsFeed: 'roish123456789/helloWorld'
+        publishVstsFeed: 'helloWorld'
+        vstsFeed: 'helloWorld'       
         allowPackageConflicts: true
