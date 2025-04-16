@@ -61,6 +61,10 @@ stages:
   jobs:
   - job: SonarQube_Scan
     steps:
+
+    - task: NuGetAuthenticate@1
+      displayName: 'Authenticate with NuGet'
+      
     # Install SonarScanner for .NET
     - script: dotnet tool install --global dotnet-sonarscanner --version 5.*
       displayName: 'Install SonarScanner'
@@ -89,6 +93,10 @@ stages:
 
     - task: SonarQubePublish@5
       displayName: 'Publish Results to SonarQube'
+
+
+
+
 
 # - stage: Publish
 #   displayName: 'Publish to Azure Artifacts'
