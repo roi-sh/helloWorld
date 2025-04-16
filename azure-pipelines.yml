@@ -73,7 +73,7 @@ stages:
       displayName: 'Push NuGet package'
       inputs:
         command: 'push'
-        packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+        packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
         nuGetFeedType: 'internal'
         publishVstsFeed: 'helloWorld'
         allowPackageConflicts: true
