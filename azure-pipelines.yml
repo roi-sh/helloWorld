@@ -65,16 +65,6 @@ stages:
     - task: NuGetAuthenticate@1
       displayName: 'Authenticate with NuGet'
 
-    # Install SonarScanner (with error handling)
-    - script: |
-        dotnet tool install --global dotnet-sonarscanner --version 5.* || echo "SonarScanner already installed, continuing..."
-      displayName: 'Install SonarScanner'
-      continueOnError: true  # Prevent failure if already installed
-
-    # Verify SonarScanner installation
-    - script: dotnet sonarscanner --version
-      displayName: 'Verify SonarScanner'
-
     # Prepare SonarQube analysis
     - task: SonarQubePrepare@5
       displayName: 'Prepare Analysis'
