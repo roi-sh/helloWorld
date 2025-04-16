@@ -50,7 +50,7 @@ stages:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
         ArtifactName: 'drop'
         publishLocation: 'Container'
-        
+
 - stage: Publish
   displayName: 'Publish to Azure Artifacts'
   dependsOn: Build
@@ -76,6 +76,6 @@ stages:
         command: 'push'
         packagesToPush: '$(System.ArtifactsDirectory)/drop/*.nupkg'
         nuGetFeedType: 'internal'
-        vstsFeed: 'c23485ab-5043-4e9c-b5fb-74ea3921a802'
+        vstsFeed: 'MyNewFeed'
         allowPackageConflicts: true
 
